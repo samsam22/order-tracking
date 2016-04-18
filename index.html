@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Order Tracking by samsam22</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Order Tracking</h1>
+      <h2 class="project-tagline">With Custom User Authentication Using PHP &amp; MySQL</h2>
+      <a href="https://github.com/samsam22/order-tracking" class="btn">View on GitHub</a>
+      <a href="https://github.com/samsam22/order-tracking/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/samsam22/order-tracking/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="order-tracking-with-user-authentication-in-phpmysql" class="anchor" href="#order-tracking-with-user-authentication-in-phpmysql" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Order Tracking with User Authentication in PHP/MySQL</h1>
+
+<h3>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h3>
+
+<p>The goal here is to create a simple one page/file authentication system in PHP with a basic bootstrap-themed HTML form inside the .php file that posts the collected infromation from the form back to itself then compares those values with values stored in a MySQL database. The form requires that the user enter 3 pieces of information (a username, an order ID, and a ZIP code) which will then be passed to MySQL to see if there are any rows where all 3 values are a match. Then depending on whether or not there are any matches, certain functions will be checked/performed.</p>
+
+<h3>
+<a id="flow" class="anchor" href="#flow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Flow</h3>
+
+<p>The front end is pretty much done, with the exception of the modal(s) mentioned below. Everything in front end must be bootstrap or bootstrap friendly. After the user enters the 3 values into the form and submits them, the flow pretty much goes like this:</p>
+
+<ul>
+<li>1) Do simple validation on the 3 form fields to prevent basic user error. Any method is fine, requirements would be that username is minimally filled with something, order_id can only contain numbers, zip code can also only contain numbers must be exactly 5 digits long.</li>
+<li>1a) If form fields are validated, a bootstrap modal appears with a moving progress bar for 2-3 seconds (just for show).</li>
+<li>2) Check the MySQL database for any row where ALL 3 values are a match.</li>
+<li>2a/3) If there is a match, then check and compare the last_checked datime to the current datetime for that match.</li>
+<li>3a) If less than 6 hours have passed then, in the same modal the progress bar was in, display an error notifying user they may only check the tracking once very 6 hours.</li>
+<li>3b) If exactly or more than 6 hours have passed then save the corresponding tracking number in a PHP variable so it can be passed to the USPS API which will be used to return the tracking information for the order (again, in the same modal). The tracking info is returned in JSON XML/array format and would need to be parsed and formatted into someting readable before being displayed. In the MySQL database, set the last_checked datetiem value for the corresponding order ID to the current time.</li>
+<li>2b) If there are no rows where all the 3 values from the form match up, then display an (again, in same modal) notifying the user and telling them to check to make sure they entered all the information correctly.</li>
+<li>1b) If form fields are not all validated, highlight the corresponding form field in red and show error directly beneath frield or at the top of form.</li>
+</ul>
+
+<h3>
+<a id="example-mysql-table" class="anchor" href="#example-mysql-table" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example MySQL Table</h3>
+
+<table>
+<thead>
+<tr>
+<th>id (primary key)</th>
+<th align="center">username (varchar 50)</th>
+<th align="right">order_id (varchar 10)</th>
+<th>zip_code (varchar 5)</th>
+<th>tracking_number (varchar 22)</th>
+<th>last_checked (datetime)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td align="center">bob123</td>
+<td align="right">3832043</td>
+<td>10001</td>
+<td>940534539482957775698</td>
+<td>2016-04-18 06:45:32</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="center">sally343</td>
+<td align="right">77734172</td>
+<td>27703</td>
+<td>9405345397502494204</td>
+<td>2016-04-18 06:45:32</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="center">john996</td>
+<td align="right">10353451</td>
+<td>69001</td>
+<td>9405345394947569938474</td>
+<td>2016-04-18 06:45:32</td>
+</tr>
+</tbody>
+</table>
+
+<h3>
+<a id="focus" class="anchor" href="#focus" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Focus</h3>
+
+<p>Probably the most important part of this project: this should all be done in such a way that the tracking number is never actually revealed to the user. Preferrably it would not even be possible for a tech savy user to somehow retrieve or intercept the tracking number somewhere in between when it is pulled from the MySQL database and sent to USPS API. But this is not a requirement, as long as the tracking number doesn't actually physically appear on the page anywhere, and is not easily accessible to the average user, that is fine.</p>
+
+<h3>
+<a id="other-notes" class="anchor" href="#other-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other Notes</h3>
+
+<ul>
+<li>The modal(s) should have a close button at the bottom right of the modal (but not when the progress bar is present).</li>
+<li>The ZIP code will kind of act as the password, so the input type on the textbox for the zipcode will be password, but it doesn't really need to be hashed or salted or anything.</li>
+<li>I'm trying to keep this as simple as possible, so I don't <em>think</em> any sessions would need to be used, unless maybe to prevent the user from somehow thwarting the check to make sure its been at least 6 hours since the last time the tracking was checked by just refreshing the page or something. Not sure on this one.</li>
+</ul>
+
+<h3>
+<a id="files" class="anchor" href="#files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Files</h3>
+
+<ul>
+<li>You can find the complete front end, except for the modal(s) in track.html.</li>
+<li>What's I've done so far to try and compares form submissions against the MySQL databasae is in track.php.</li>
+<li>The PHP code needed to interact with USPS's API and request tracking information for a package is in usps.php.</li>
+<li>Create a sample database with sample.sql file.</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/samsam22/order-tracking">Order Tracking</a> is maintained by <a href="https://github.com/samsam22">samsam22</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
