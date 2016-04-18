@@ -34,3 +34,4 @@ Probably the most important part of this project: this should all be done in suc
 - You can find the complete front end, except for the modal(s) in track.html.
 - What's I've done so far to try and compares form submissions against the MySQL databasae is in track.php.
 - The PHP code needed to interact with USPS's API and request tracking information for a package is in usps.php.
+- Create a sample database with sample.sql file.
