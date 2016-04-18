@@ -6,7 +6,8 @@ $order_id = $_POST["order_id"];
 $zip_code = $_POST["zip_code"];
 
 // Connect to the database
-$con = mysql_connect("localhost","bestpura_track","adt101");
+$con = mysql_connect("localhost","user","password");
+
 // Make sure we connected succesfully
 if(! $con)
 {
