@@ -7,13 +7,13 @@ The goal here is to create a simple one page/file authentication system in PHP w
 The front end is pretty much done, with the exception of the modal(s) mentioned below. Everything in front end must be bootstrap or bootstrap friendly. After the user enters the 3 values into the form and submits them, the flow pretty much goes like this:
  
 - 1) Do simple validation on the 3 form fields to prevent basic user error. Any method is fine, requirements would be that username is minimally filled with something, order_id can only contain numbers, zip code can also only contain numbers must be exactly 5 digits long.
-- 2a) If form fields are validated, a bootstrap modal appears with a moving progress bar for 2-3 seconds (just for show).
-- 3) Check the MySQL database for any row where ALL 3 values are a match.
-- 4a) If there is a match, then check and compare the last_checked datime to the current datetime for that match.
-- 5a) If less than 6 hours have passed then, in the same modal the progress bar was in, display an error notifying user they may only check the tracking once very 6 hours.
-- 5b) If exactly or more than 6 hours have passed then save the corresponding tracking number in a PHP variable so it can be passed to the USPS API which will be used to return the tracking information for the order (again, in the same modal). The tracking info is returned in JSON XML/array format and would need to be parsed and formatted into someting readable before being displayed. In the MySQL database, set the last_checked datetiem value for the corresponding order ID to the current time.
-- 4b) If there are no rows where all the 3 values from the form match up, then display an (again, in same modal) notifying the user and telling them to check to make sure they entered all the information correctly.
-- 2b) If form fields are not all validated, highlight the corresponding form field in red and show error directly beneath frield or at the top of form.
+- 1a) If form fields are validated, a bootstrap modal appears with a moving progress bar for 2-3 seconds (just for show).
+- 2) Check the MySQL database for any row where ALL 3 values are a match.
+- 2a/3) If there is a match, then check and compare the last_checked datime to the current datetime for that match.
+- 3a) If less than 6 hours have passed then, in the same modal the progress bar was in, display an error notifying user they may only check the tracking once very 6 hours.
+- 3b) If exactly or more than 6 hours have passed then save the corresponding tracking number in a PHP variable so it can be passed to the USPS API which will be used to return the tracking information for the order (again, in the same modal). The tracking info is returned in JSON XML/array format and would need to be parsed and formatted into someting readable before being displayed. In the MySQL database, set the last_checked datetiem value for the corresponding order ID to the current time.
+- 2b) If there are no rows where all the 3 values from the form match up, then display an (again, in same modal) notifying the user and telling them to check to make sure they entered all the information correctly.
+- 1b) If form fields are not all validated, highlight the corresponding form field in red and show error directly beneath frield or at the top of form.
 
 ### Example MySQL Table
 | id (primary key) | username (varchar 50) | order_id (varchar 10) | zip_code (varchar 5) | tracking_number (varchar 22) | last_checked (datetime) |
