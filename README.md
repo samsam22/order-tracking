@@ -1,4 +1,6 @@
-# Order Tracking with User Authentication in PHP/MySQL
+#Order Tracking with User Authentication in PHP/MySQL
+
+##This is still very much a work in progress!
 
 ###Introduction
 The goal here is to create a simple one page/file authentication system in PHP with a basic bootstrap-themed HTML form inside the .php file that posts the collected infromation from the form back to itself then compares those values with values stored in a MySQL database. The form requires that the user enter 3 pieces of information (a username, an order ID, and a ZIP code) which will then be passed to MySQL to see if there are any rows where all 3 values are a match. Then depending on whether or not there are any matches, certain functions will be checked/performed.
